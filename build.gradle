@@ -1,0 +1,92 @@
+// ===== BEGIN build.gradle (FINAL CORRECTED VERSION 2) =====
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url = "https://files.minecraftforge.net/maven" }
+        maven { url = 'https://repo.spongepowered.org/maven' }
+    }
+    dependencies {
+        classpath files('forgegradle/ForgeGradle-2.3.8.jar')
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = mod_version
+group = mod_group
+archivesBaseName = mod_id
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = "${minecraft_version}-${forge_version}"
+    runDir = 'run'
+    mappings = mappings_version
+    def args = []
+    // 关键修正：将 CorePlugin 的路径改为正确的包名
+    args << "-Dfml.coreMods.load=com.ultimatekevin.lucraftcorefix.core.FixPlugin"
+    args << '-Dmixin.hotSwap=true'
+    args << '-Dmixin.checks.interfaces=true'
+    args << '-Dmixin.debug.export=true'
+    clientJvmArgs.addAll(args)
+    serverJvmArgs.addAll(args)
+}
+
+repositories {
+    maven { url = "https://cursemaven.com" }
+    maven { url = 'https://maven.cleanroommc.com' }
+    mavenCentral()
+    maven { url = "https://repo.spongepowered.org/maven" }
+}
+
+configurations {
+    embed
+    compile.extendsFrom(embed)
+}
+
+dependencies {
+    embed 'zone.rong:mixinbooter:7.0'
+    compile 'com.cleanroommc:assetmover:2.0'
+    deobfCompile "curse.maven:lucraft-core-230651:3775980"
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'mod_id': mod_id, 'mod_name': mod_name, 'version': project.version,
+                'mcversion': minecraft_version, 'mod_description': mod_description,
+                'mod_author': mod_author
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+    rename '(.+_at.cfg)', 'META-INF/$1'
+}
+
+jar {
+    from {
+        configurations.embed.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+
+    manifest {
+        attributes(
+                // 关键修正：将 CorePlugin 的路径改为正确的包名
+                'FMLCorePlugin': 'com.ultimatekevin.lucraftcorefix.core.FixPlugin',
+                'FMLCorePluginContainsFMLMod': 'true',
+                'ForceLoadAsMod': 'true',
+                'FMLAT': 'lucraftcorefix_at.cfg',
+                'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+                'MixinConfigs': 'mixins.lucraftcorefix.json'
+        )
+    }
+}
+// ===== END build.gradle (FINAL CORRECTED VERSION 2) =====
