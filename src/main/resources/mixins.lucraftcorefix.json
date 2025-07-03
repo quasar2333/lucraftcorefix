@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.6",
+  "package": "com.ultimatekevin.lucraftcorefix.mixin",
+  "refmap": "mixins.lucraftcorefix.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MessageSyncJsonSuitSetMixin",
+    "MessageSyncJsonSuperpowerMixin",
+    "AbilityContainerMixin"
+  ],
+  "client": [],
+  "server": []
+}

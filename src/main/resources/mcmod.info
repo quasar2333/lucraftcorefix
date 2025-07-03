@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "lucraftcorefix",
+    "name": "LucraftCore Fix",
+    "description": "Fixes network packet size issues for LucraftCore addons.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["UltimateKevin"],
+    "credits": "Lucraft",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": ["lucraftcore"]
+  }
+]
